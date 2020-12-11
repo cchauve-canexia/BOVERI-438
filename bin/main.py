@@ -174,6 +174,7 @@ def compute_variants(parameters, log):
     DUMP_FILES_DICT = {x[DUMP_RUN]: x[DUMP_FILE] for _, x in DUMP_FILES_DF.iterrows()}
     NEXTSEQ_LATEST_RUNS_FILES = utils.get_NextSeq_latest_runs_file(parameters)
     EXCLUDED_SAMPLES_FILES = utils.get_excluded_samples_file(parameters)
+    VARIANTS_CSV_FILES = utils.get_variants_csv_file(parameters)
     for manifest, manifest_file in MANIFESTS_INFO.items():
         MSI_COORDS = get_MSI_coordinates(manifest_file)
         RUNS_DF = pd.read_csv(NEXTSEQ_LATEST_RUNS_FILES[manifest], sep=',')
@@ -184,7 +185,7 @@ def compute_variants(parameters, log):
         for _, run_data in RUNS_DF.iterrows():
             add_variants_run_pair(run_data, DUMP_FILES_DICT, EXCLUDED_SAMPLES, MSI_COORDS, VARIANTS_DICT, log)
         VARIANTS_DF = pd.DataFrame.from_dict(VARIANTS_DICT, orient='index')
-        VARIANTS_DF.to_csv(utils.get_variants_csv_file(parameters, manifest), sep=',')
+        VARIANTS_DF.to_csv(VARIANTS_CSV_FILES[manifest], sep=',')
 
 # Reading parameters
 PARAMETERS = utils.read_parameters(sys.argv[1])
