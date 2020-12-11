@@ -22,3 +22,5 @@ Finally the main variants CSV file, that contains information about all the inde
 ```python bin/main.py parameters.tsv log/variants_v40_v51.log variants > log/variants_v40_v51.out 2>&1```  
 It resulted in two CSV files, ```out/variants_v40.csv``` and ```out/variants_v51.csv```.  
 Indels from excluded samples or in MSI amplicons for amnifest v5.1 have been filtered out.
+
+A notebook describing the analysis of the indel calls between NextSeq and MiSeq runs is available in ```doc/BOVERI-348.ipynb```.
