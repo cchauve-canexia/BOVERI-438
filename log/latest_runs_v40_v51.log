@@ -1,0 +1,4 @@
+LATEST_RUNS	python bin/get_pipeline_latest_output.py -r data/RUN_SUMMARIES_NextSeq_v40.csv -o out/RUN_SUMMARIES_NextSeq_v40_latest_run.csv
+LATEST_RUNS	python bin/get_pipeline_latest_output.py -r data/RUN_SUMMARIES_MiSeq_v40.csv -o out/RUN_SUMMARIES_MiSeq_v40_latest_run.csv
+LATEST_RUNS	python bin/get_pipeline_latest_output.py -r data/RUN_SUMMARIES_NextSeq_v51.csv -o out/RUN_SUMMARIES_NextSeq_v51_latest_run.csv
+LATEST_RUNS	python bin/get_pipeline_latest_output.py -r data/RUN_SUMMARIES_MiSeq_v51.csv -o out/RUN_SUMMARIES_MiSeq_v51_latest_run.csv
