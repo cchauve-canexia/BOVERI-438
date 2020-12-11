@@ -55,11 +55,13 @@ def compute_dump_files(parameters, log):
     RUNS_TO_DO = []
     for manifest in MANIFESTS:
         # NextSeq runs
+        MATCHING_MISEQ_RUNS = []
         for _, run_data in pd.read_csv(NEXTSEQ_LATEST_RUNS[manifest], sep=',').iterrows():
             RUNS_TO_DO.append(run_data)
-        # MiSeq runs
+            MATCHING_MISEQ_RUNS.append(run_data[MISEQ_RUN])
+        # Matching MiSeq runs
         for _, run_data in pd.read_csv(MISEQ_LATEST_RUNS[manifest], sep=',').iterrows():
-            RUNS_TO_DO.append(run_data)
+            if run_data[RUN_ID] in MATCHING_MISEQ_RUNS: RUNS_TO_DO.append(run_data)
         # Generating dump files
         for run_data in RUNS_TO_DO:
             run, latest_run = run_data[RUN_ID], utils.get_latest_run_dir(run_data)
