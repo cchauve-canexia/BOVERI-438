@@ -1,9 +1,11 @@
 '''
 Auxiliary functions to manipulate parameters
 '''
+# Third-party imports
 import pandas as pd
 
-from data_keys import *
+# Local imports
+from data_format import LATEST_RUN, PIPELINE_OUTPUT
 
 def read_parameters(parameters_file):
     '''Returns a dictionary of parameters values'''
@@ -41,16 +43,27 @@ def files_dict(parameters, file_key, suffix, dir_key=None):
         RESULT[manifest] = pad_file(parameters, file_key, suff_str, dir_key=dir_key)
     return RESULT
 
+'''Functions to access data files'''
+def get_NextSeq_runs_file(parameters):
+    '''Returns a dictionary indexed by manifests of paths to files containing
+    the run info for NextSeq samples'''
+    return create_files_dict(parameters, 'NEXTSEQ_RUNS_DATA_CSV_PREFIX', '.csv', dir_key='DATA_DIR')
+
+def get_MiSeq_runs_file(parameters):
+    '''Returns a dictionary indexed by manifests of paths to files containing
+    the run info for MiSeq samples'''
+    return create_files_dict(parameters, 'MISEQ_RUNS_DATA_CSV_PREFIX', '.csv', dir_key='DATA_DIR')
+
 '''Functions to create and access latest run information'''
 
 def get_NextSeq_latest_runs_file(parameters):
     '''Returns a dictionary indexed by manifests of paths to files containing
-    the latest tun info for NextSeq samples'''
+    the latest run info for NextSeq samples'''
     return create_files_dict(parameters, 'NEXTSEQ_RUNS_DATA_CSV_PREFIX', '_latest_run.csv', dir_key='OUT_DIR')
 
 def get_MiSeq_latest_runs_file(parameters):
     '''Returns a dictionary indexed by manifests of paths to files containing
-    the latest tun info for MiSeq samples'''
+    the latest run info for MiSeq samples'''
     return create_files_dict(parameters, 'MISEQ_RUNS_DATA_CSV_PREFIX', '_latest_run.csv', dir_key='OUT_DIR')
 
 def get_latest_run_dir(run_data):

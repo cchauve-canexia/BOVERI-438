@@ -1,6 +1,5 @@
 ''' Fields of data files '''
 
-
 # Runs info file
 LATEST_RUN = 'latest_run'
 PIPELINE_OUTPUT = 'Pipeline Output in S3 bucket rd-output'
