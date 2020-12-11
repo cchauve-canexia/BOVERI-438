@@ -17,16 +17,7 @@ def read_parameters(parameters_file):
             PARAMETERS[l1[0]] = l1[1]
     return PARAMETERS
 
-def get_manifests(parameters):
-    '''Returns dictionary manifest_id -> manifest_file'''
-    DATA_DIR = parameters['DATA_DIR']
-    MANIFESTS = parameters['MANIFESTS'].split(' ')
-    RESULT = {}
-    i = 0
-    while i < len(MANIFESTS):
-        RESULT[MANIFESTS[i]] = pad_file(DATA_DIR, MANIFESTS[(i + 1)], None)
-        i += 2
-    return RESULT
+'''Functions to create file paths'''
 
 def pad_file(parameters, file_key, suffix, dir_key=None):
     '''Pad a file name with a directory and a suffix'''
@@ -43,28 +34,41 @@ def files_dict(parameters, file_key, suffix, dir_key=None):
         RESULT[manifest] = pad_file(parameters, file_key, suff_str, dir_key=dir_key)
     return RESULT
 
+'''Manifests'''
+
+def get_manifests(parameters):
+    '''Returns dictionary manifest_id -> manifest_file'''
+    DATA_DIR = parameters['DATA_DIR']
+    MANIFESTS = parameters['MANIFESTS'].split(' ')
+    RESULT = {}
+    i = 0
+    while i < len(MANIFESTS):
+        RESULT[MANIFESTS[i]] = DATA_DIR + '/' + MANIFESTS[(i + 1)]
+        i += 2
+    return RESULT
+
 '''Functions to access data files'''
 def get_NextSeq_runs_file(parameters):
     '''Returns a dictionary indexed by manifests of paths to files containing
     the run info for NextSeq samples'''
-    return create_files_dict(parameters, 'NEXTSEQ_RUNS_DATA_CSV_PREFIX', '.csv', dir_key='DATA_DIR')
+    return files_dict(parameters, 'NEXTSEQ_RUNS_DATA_CSV_PREFIX', '.csv', dir_key='DATA_DIR')
 
 def get_MiSeq_runs_file(parameters):
     '''Returns a dictionary indexed by manifests of paths to files containing
     the run info for MiSeq samples'''
-    return create_files_dict(parameters, 'MISEQ_RUNS_DATA_CSV_PREFIX', '.csv', dir_key='DATA_DIR')
+    return files_dict(parameters, 'MISEQ_RUNS_DATA_CSV_PREFIX', '.csv', dir_key='DATA_DIR')
 
 '''Functions to create and access latest run information'''
 
 def get_NextSeq_latest_runs_file(parameters):
     '''Returns a dictionary indexed by manifests of paths to files containing
     the latest run info for NextSeq samples'''
-    return create_files_dict(parameters, 'NEXTSEQ_RUNS_DATA_CSV_PREFIX', '_latest_run.csv', dir_key='OUT_DIR')
+    return files_dict(parameters, 'NEXTSEQ_RUNS_DATA_CSV_PREFIX', '_latest_run.csv', dir_key='OUT_DIR')
 
 def get_MiSeq_latest_runs_file(parameters):
     '''Returns a dictionary indexed by manifests of paths to files containing
     the latest run info for MiSeq samples'''
-    return create_files_dict(parameters, 'MISEQ_RUNS_DATA_CSV_PREFIX', '_latest_run.csv', dir_key='OUT_DIR')
+    return files_dict(parameters, 'MISEQ_RUNS_DATA_CSV_PREFIX', '_latest_run.csv', dir_key='OUT_DIR')
 
 def get_latest_run_dir(run_data):
     '''Returns the path to latest run directory for a run described in the
@@ -84,7 +88,7 @@ def get_latest_run_cmd(parameters, file_in, file_out):
 
 def get_dump_tsv_file(parameters):
     '''Returns the path to the tsv file containing the list of dump files'''
-    return pad_file(parameters, file_key='DUMP_FILES_TSV', '', dir_key='OUT_DIR')
+    return pad_file(parameters, 'DUMP_FILES_TSV', '', dir_key='OUT_DIR')
 
 def get_dump_in(parameters, latest_run):
     '''Returns the -i parameters for the dump_variants script for a specific run'''
@@ -110,9 +114,9 @@ def get_dump_cmd(parameters, run, latest_run):
 def get_excluded_samples_file(parameters):
     '''Returns a dictionary indexed by manifests of paths to files containing the
     list of excluded samples'''
-    return create_files_dict(parameters, 'EXCLUDED_SAMPLES_PREFIX', '.csv', dir_key='DATA_DIR')
+    return files_dict(parameters, 'EXCLUDED_SAMPLES_PREFIX', '.csv', dir_key='DATA_DIR')
 
 def get_variants_csv_file(parameters):
     '''Returns a dictionary indexed by manifests of paths to files containing the
     matched variants for all pairs of matching runs for this manifest'''
-    create_files_dict(parameters, 'VARIANTS_CSV_PREFIX', '.csv', dir_key='OUT_DIR')
+    return files_dict(parameters, 'VARIANTS_CSV_PREFIX', '.csv', dir_key='OUT_DIR')

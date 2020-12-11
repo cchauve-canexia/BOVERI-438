@@ -62,9 +62,9 @@ def get_latest_run(r):
 
 
 def main(args):
-    run_list = pd.read_csv(args.run_list, sep='\t')
+    run_list = pd.read_csv(args.run_list, sep=',')
     run_list['latest_run'] = run_list[['Run#', 'Raw Data']].apply(lambda x: get_latest_run(x), axis=1)
-    run_list.to_csv(args.output_file, index=False, sep='\t')
+    run_list.to_csv(args.output_file, index=False, sep=',')
 
 
 if __name__ == '__main__':

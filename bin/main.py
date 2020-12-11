@@ -30,8 +30,6 @@ def compute_latest_runs(parameters, log):
     # Results files, indexed by manifest
     NEXTSEQ_LATEST_RUNS = utils.get_NextSeq_latest_runs_file(parameters)
     MISEQ_LATEST_RUNS = utils.get_MiSeq_latest_runs_file(parameters)
-    # Command to generate result files
-    LATEST_RUNS_CMD = utils.get_latest_run_cmd(parameters)
     for manifest in MANIFESTS:
         # NextSeq run
         nextseq_in, nextseq_out = NEXTSEQ_RUNS[manifest], NEXTSEQ_LATEST_RUNS[manifest]
@@ -64,17 +62,18 @@ def compute_dump_files(parameters, log):
             RUNS_TO_DO.append(run_data)
         # Generating dump files
         for run_data in RUNS_TO_DO:
-            run, latest_run = run_data[RUN_ID], utils.get_latest_run_file(run_data)
-            if pd.isnull(latest_run): dump_cmd, dump_out = 'no_latest_run', str(np.nan)
+            run, latest_run = run_data[RUN_ID], utils.get_latest_run_dir(run_data)
+            if pd.isnull(latest_run): dump_cmd_out, dump_out = 'no_latest_run', str(np.nan)
             else:
                 dump_out = utils.get_dump_out(parameters, run)
                 if not os.path.isfile(dump_out):
                     dump_cmd = utils.get_dump_cmd(parameters, run, latest_run)
                     subprocess.call(dump_cmd)
+                    dump_cmd_out = ' '.join(dump_cmd)
                 else:
-                    dump_cmd = 'file exists'
+                    dump_cmd_out = 'file exists'
             DUMP_FILES.write('\n' + run + '\t' + dump_out)
-            log.write('DUMP_FILES\t' + run + '\t' + dump_cmd + '\t' + dump_out + '\n')
+            log.write('DUMP_FILES\t' + run + '\t' + dump_cmd_out + '\t' + dump_out + '\n')
     DUMP_FILES.close()
 
 # Extracting matched variants into a csv file
@@ -125,7 +124,8 @@ def compute_variants(parameters, log):
 
     def add_variant(variants_dict, variant, run_pair, run_type, excluded_samples, MSI_coords):
         '''Add variant to variants_dict if it is in the target mutations (indels)
-        not in an excluded sample and not in an MSI amplicon'''
+        not in an excluded sample and not in an MSI amplicon
+        Returns 0 if variant added and 1 if filtered out'''
         if variant[DUMP_MUT] in DUMP_MUT_TO_SELECT:
             run_type_ext = {'MiSeq': '_m', 'NextSeq': '_n'}
             ext = run_type_ext[run_type]
